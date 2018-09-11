@@ -1,0 +1,35 @@
+
+<?php
+
+$labelsArr = array();
+
+if ($form->getMessages()) {
+    
+    echo '<div class="alert alert-danger">';
+    
+    foreach($form->getElements() as $element) {
+        $msg = $this->formElementErrors($element, array('class' => 'inline'));
+        
+        if (empty(strip_tags( $msg ))){
+            continue;
+        }
+        
+        $labelsArr[] = array(
+            'label' => ($element->getLabel()) ? strip_tags($this->formLabel($element)) : '',
+            'msg' => $msg
+        );
+    }
+    
+    if (count($labelsArr)) {
+        foreach($labelsArr as $el) {
+            echo '<p>Error! <italic>' . $el['label'] . '</italic>: ';
+            echo $el['msg'] . '</p>';
+        }
+    }
+    
+    echo '</div>';
+    
+}
+
+
+

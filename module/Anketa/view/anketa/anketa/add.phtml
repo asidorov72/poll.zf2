@@ -1,0 +1,51 @@
+<?php
+
+$title = 'Create a new question';
+$this->headTitle($title);
+
+?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+<?php
+
+$form->setAttribute('action', $this->url('anketa', array('action' => 'add')));
+$form->prepare();
+
+echo $this->form()->openTag($form);
+echo $this->formHidden($form->get('id'));
+
+echo $this->partial('partial/messages.phtml');
+
+?>
+<div class="row mb-5 form-group">
+  <div class="col-md-1"><?php echo $this->formLabel($form->get('title')); ?></div>
+  <div class="col-md-11"><p><?php echo $this->formInput($form->get('title')); ?></p></div>
+</div>
+<div class="row mb-5 form-group">
+  <div class="col-md-1"><?php echo $this->formLabel($form->get('question')); ?></div>
+  <div class="col-md-11"><p><?php echo $this->formTextarea($form->get('question')); ?></p></div>
+</div>
+
+<?php
+$num = $form->getCountPrompts();
+?>
+
+<div class="row mb-5 form-group">
+ 
+  <?php for($n = 0; $n < $num; $n++): ?>
+  <?php 
+    $answerOptions = array();
+    $answerOptions[$n] = ' Set as correct'; 
+  ?>
+  <div class="col-md-1"></div>
+  <div class="col-md-2"><p><?php echo $this->formMultiCheckbox($form->get("answer")->setValueOptions($answerOptions)); ?></p></div>
+  <div class="col-md-9"><p><?php echo $this->formInput($form->get("prompts[$n][prompt]")); ?></p></div>
+  
+ <?php endfor; ?>
+</div>
+<div class="row mb-5 form-group">
+  <div class="col-md-1">&nbsp;</div>
+  <div class="col-md-11"><?php echo $this->formSubmit($form->get('submit')); ?></div>
+</div>
+<?php
+
+echo $this->form()->closeTag();

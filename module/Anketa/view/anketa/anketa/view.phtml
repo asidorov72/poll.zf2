@@ -1,0 +1,17 @@
+<?php
+
+$title = 'Test results';
+$this->headTitle($title);
+
+?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+<h3>Hello, <?php echo $user->getDisplayname(); ?></h3>
+<p>Here are your results:</p>
+
+<div class="row mb-10">
+  <?php foreach($results as $result): ?>
+  <?php $className = ($result->result === 'correct') ? 'text-success' : 'text-danger'; ?>
+  <div class="col-md-7">Question: <i><?php echo $result->question; ?></i></div>
+  <div class="col-md-5"><span class="<?php echo $className; ?>"><?php echo $result->result; ?></span></div>
+  <?php endforeach; ?>
+</div>

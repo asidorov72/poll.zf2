@@ -1,0 +1,86 @@
+<?php
+$title = 'My Anketa';
+$this->headTitle($title);
+?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+<p>authorized users only</p>
+<?php echo $this->partial('partial/messages.phtml'); ?>
+
+<?php $cnt = 0; foreach($questions as $question): ?>
+<div class="blogpost-outer"><div class="<?php echo ($cnt%2) ? 'gray' : 'white'; ?> blogpost">
+<div id="test-block-<?php echo $question->id; ?>">
+<?php
+$form->setAttribute('action', $this->url('anketa', array(
+    'action' => 'apply',
+    'id' => $question->id
+  )));
+$form->prepare();
+echo $this->form()->openTag($form);
+?>
+<?php if($this->zfcUserIdentity() && $question->user_id == $this->zfcUserIdentity()->getId()): ?>
+<p>
+  <span><a href="<?php echo $this->url('anketa', array('action' => 'edit', 'id' => $question->id)); ?>">Edit</a></span>
+  <span><a href="<?php echo $this->url('anketa', array('action' => 'delete', 'id' => $question->id)); ?>">Delete</a></span>
+</p>
+<?php endif; ?>
+<p><small class=""><?php echo 'Written by ' . $this->escapeHtml($this->get_zfcuser_by_id_helper($question->user_id, null, $users)); ?></small></p>
+<p><small class="small"><?php echo $this->escapeHtml($this->date_format_helper($question->date,'d-m-Y H:i')); ?></small></p>
+<p><?php echo $this->escapeHtml($question->title); ?></p>
+<h2><?php echo $this->escapeHtml($question->question); ?></h2>
+<p>
+    <?php $question->prompts = unserialize($question->prompts ); ?>
+    <?php foreach($question->prompts as $key => $val): ?>
+        <?php if (empty($val['prompt'])) { continue; } ?>
+        <?php $bgcolor = ($key%2) ? '#e6e6ff' : '#ffe6ff'; ?>
+        <div style="padding:5px; margin-top:-1px; border: solid 1px #cccccc; background-color: <?php echo $bgcolor; ?>">
+            <div class="container">
+                <div class="row">
+                    <?php 
+                        $answerOptions = array();
+                        $answerOptions[$key] = ''; 
+                    ?>
+                    <div class="col-sm-1"><?php echo $this->formMultiCheckbox($form->get("answer")->setValueOptions($answerOptions)); ?></div>
+                    <div class="col-sm-11"><?php echo $val['prompt']; ?></div>
+                </div>
+            </div>
+        </div>
+    <?php endforeach; ?>
+</p>
+<?php echo $this->formHidden($form->get('id')->setValue($question->id)); ?>
+<div class="row mb-10 form-group">
+  <div class="col-md-12">
+      <?php if($this->zfcUserIdentity() && $question->user_id == $this->zfcUserIdentity()->getId()): ?>
+      <button type="button" id="apply-btn-<?php echo $key; ?>" class="apply-btn btn btn-warning">Apply</button>
+      <span class="loader"></span>
+      <?php else: ?>
+      <p>Authorized users only can solve the test.</p>
+      <?php endif; ?>
+  </div>
+</div>
+<?php echo $this->form()->closeTag(); ?>
+</div></div></div>
+<?php $cnt++; endforeach; ?>
+<p>
+<?php
+$form->setAttribute('action', $this->url('anketa', array(
+    'action' => 'view'
+  )));
+$form->prepare();
+echo $this->form()->openTag($form);
+?>
+<div class="row mb-10 form-group">
+  <div class="col-md-1">
+      <?php if($this->zfcUserIdentity() && $question->user_id == $this->zfcUserIdentity()->getId()): ?>
+      <?php echo $this->formSubmit($form->get('submit')->setValue('View')->setAttributes(['class' => 'btn btn-success'])); ?>
+      <?php endif; ?>
+  </div>
+  <div class="col-md-11">
+      <?php if($this->zfcUserIdentity() && $question->user_id == $this->zfcUserIdentity()->getId()): ?>
+      <p>Click "View" to view your results.</p>
+      <?php else: ?>
+      <p>Authorized users only can solve the test.</p>
+      <?php endif; ?>
+  </div>
+</div>
+<?php echo $this->form()->closeTag(); ?>
+</p>

@@ -1,0 +1,26 @@
+<?php
+
+$title = 'Delete post';
+$this->headTitle($title);
+
+?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+<p>Are you sure that you want to delete
+  '<?php echo $this->escapeHtml($post->title); ?>' by
+  '<?php echo $this->escapeHtml($this->get_zfcuser_by_id_helper($post->user_id, $user)); ?>'?
+</p>
+<?php
+
+$url = $this->url('anketa', array(
+    'action' => 'delete',
+    'id' => $this->id
+  ));
+
+?>
+<form action="<?php echo $url; ?>" method="post">
+  <div class=0form-group"">
+    <input name="id" type="hidden" value="<?php echo (int) $post->id; ?>"/>
+    <input name="del" class="btn btn-success" type="submit" value="Yes"/>
+    <input name="del" class="btn btn-danger" type="submit" value="No"/>
+  </div>
+</form>

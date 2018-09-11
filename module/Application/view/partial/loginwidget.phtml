@@ -1,0 +1,13 @@
+<ul class="nav navbar-nav zfcuser-login-widget">
+  <?php if($this->zfcUserIdentity()): ?>
+    <li class="nav-item"><a class="nav-link" href="<?php echo $this->url('zfcuser/logout'); ?>">Logout</a></li>
+    <?php
+      if (empty($name = $this->zfcUserIdentity()->getDisplayname())) {
+        $name = $this->zfcUserIdentity()->getEmail();
+      }
+    ?>
+    <li class="nav-item"><a class="nav-link" href="<?php echo $this->url('zfcuser'); ?>">[<?php echo $name; ?>]</a></li>
+  <?php else: ?>
+    <li class="nav-item"><a class="nav-link" href="<?php echo $this->url('zfcuser/login'); ?>">Login</a></li>
+  <?php endif; ?>
+</ul>
